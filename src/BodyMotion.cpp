@@ -1,8 +1,17 @@
-#include "EulerRot.hpp"
+#include "BodyMotion.hpp"
+
+Matrix<float, 3, 3> Skew(Vector3f p)
+{
+    Matrix<float, 3, 3> resultMat;
+    resultMat << 0, -p(2), p(1),
+                p(2), 0, -p(0),
+                -p(1), p(0), 0;
+    return resultMat;
+}
 
 Matrix<float, 3, 3> RotX(float x)
 {
-    static Matrix<float, 3, 3> rotx;  // 在函数中使用的new，在调用完该函数之后，在调用的地方释放相应地址
+    Matrix<float, 3, 3> rotx; 
     rotx << 1, 0, 0,
             0, cos(x), -sin(x),
             0, sin(x), cos(x);
@@ -11,7 +20,7 @@ Matrix<float, 3, 3> RotX(float x)
 
 Matrix<float, 3, 3> RotY(float y)
 {
-    static Matrix<float, 3, 3> roty;
+    Matrix<float, 3, 3> roty;
     roty << cos(y), 0, sin(y),
             0, 1, 0,
             -sin(y), 0, cos(y);
@@ -100,4 +109,73 @@ Matrix<float, 3, 3> EulerRot(string rotOrder, float parameter1, float parameter2
         }
     }   
     return rotMat;
+}
+
+Matrix<float, 3, 3> SE2(float x, float y, float theta)
+{
+    Matrix<float, 3, 3> resultMat;
+    resultMat << cos(theta), -sin(theta), x,
+                sin(theta), cos(theta), y,
+                0,          0,          1;
+    return resultMat;
+}
+
+Matrix<float, 4, 4> SE3(float x, float y, float z, string strRotOrder, 
+float parameter1, float parameter2, float parameter3)
+{
+    float tempPos[3] = {x, y, z};
+    Matrix<float, 3, 3> tempRot = EulerRot(strRotOrder, parameter1, parameter2, parameter3);
+    Matrix<float, 4, 4> resultMat;
+    resultMat.Identity();
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            resultMat(i, j) = tempRot(i, j);
+        }
+        resultMat(i, 3) = tempPos[i];
+    }
+    return resultMat;
+}
+
+Matrix<float, 3, 3> RotMatExp(Vector3f omega, float theta)
+{
+    Matrix<float, 3, 3> RotMat;
+    RotMat = Matrix3f::Identity() + sin(theta)*Skew(omega) + (1 - cos(theta))*(Skew(omega)*Skew(omega));
+    return RotMat;
+}
+
+Vector3f GetRotAxis(Matrix3f rotmat)
+{
+    if(rotmat == Matrix3f::Identity())
+    {
+        cout << "Rotate Axis is Undefined" << endl;
+        return Vector3f(0, 0, 0);
+    }
+    else if(rotmat.trace() == 1)
+    {
+        return 1/sqrt(2*(1+rotmat(2, 2)))*Vector3f(rotmat(0, 2), rotmat(1, 2), 1 + rotmat(2, 2));
+    }
+    else
+    {
+        Matrix3f temp = 1/(2*sin(acos(0.5*(rotmat.trace() - 1))))*(rotmat - rotmat.transpose());
+        return Vector3f(-temp(1, 2), temp(0, 2), -temp(0, 1));
+    }
+}
+
+float GetRotTheta(Matrix3f rotmat)
+{
+    if(rotmat == Matrix3f::Identity())
+    {
+        cout << "No rotation happened" << endl;
+        return 0;
+    }
+    else if(rotmat.trace() == 1)
+    {
+        return pi;
+    }
+    else
+    {
+        return acos(0.5*(rotmat.trace() - 1));
+    }
 }
