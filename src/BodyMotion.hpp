@@ -34,7 +34,7 @@ Matrix<float, 3, 3> SE2(float x = 0, float y = 0, float theta = 0);
 Matrix<float, 4, 4> SE3(float x = 0, float y = 0, float z = 0, string strRotOrder = "xyz", 
 float parameter1 = 0, float parameter2 = 0, float parameter3 = 0);
 
-// 基于Rodrigues' formula的旋转矩阵求解，输入旋转轴和旋转角度
+// 基于Rodrigues' formula的旋转矩阵求解，输入旋转轴和旋转角度，旋转轴为单位轴
 Matrix<float, 3, 3> RotMatExp(Vector3f omega, float theta = 0);
 
 // 由旋转矩阵反解出空间旋转轴，矩阵对数
@@ -42,5 +42,11 @@ Vector3f GetRotAxis(Matrix3f rotmat);
 
 // 由旋转矩阵反解出绕空间中单轴旋转的角度，矩阵对数
 float GetRotTheta(Matrix3f rotmat);
+
+// 由SE3齐次变换矩阵求出伴随变换矩阵，用于运动旋量的坐标变换
+Matrix<float, 6, 6> AdjMapMat(Matrix4f se3);
+
+// 使用螺旋轴求齐次变换矩阵SE3，螺旋轴为单位轴，输入螺旋轴和线速度组成的运动旋量以及旋转角度
+Matrix4f SE3Twist(VectorXf S, float theta);
 
 #endif

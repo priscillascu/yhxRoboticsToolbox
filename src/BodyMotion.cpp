@@ -140,6 +140,11 @@ float parameter1, float parameter2, float parameter3)
 
 Matrix<float, 3, 3> RotMatExp(Vector3f omega, float theta)
 {
+    // 若输入转轴不为单位向量，则转为单位向量1
+    if(omega.norm() != 1)
+    {
+        omega = omega/omega.norm();
+    }
     Matrix<float, 3, 3> RotMat;
     RotMat = Matrix3f::Identity() + sin(theta)*Skew(omega) + (1 - cos(theta))*(Skew(omega)*Skew(omega));
     return RotMat;
@@ -178,4 +183,89 @@ float GetRotTheta(Matrix3f rotmat)
     {
         return acos(0.5*(rotmat.trace() - 1));
     }
+}
+
+Matrix<float, 6, 6> AdjMapMat(Matrix4f se3)
+{
+    Matrix3f rotTemp = se3.block<3, 3>(0, 0);  // 使用block来提取矩阵，注意括号后面是起始行和列
+    Vector3f posTemp = se3.block<3, 1>(0, 3);
+    Matrix3f transTemp = Skew(posTemp)*rotTemp;
+
+    Matrix<float, 6, 6> resultMat;
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            resultMat(i, j) = rotTemp(i, j);
+            resultMat(i + 3, j) = transTemp(i, j);
+            resultMat(i, j + 3) = 0;
+            resultMat(i + 3, j + 3) = rotTemp(i, j);
+        }
+        
+    }
+    
+    return resultMat;
+}
+
+Matrix4f SE3Twist(VectorXf S, float theta)
+{
+    if(S.size() != 6)
+    {
+        cout << "Please enter 6 elements for the twist" << endl;
+        return Matrix4f::Identity();
+    }
+    else
+    {
+        Vector3f omega;
+        omega << S(0), S(1), S(2);
+        Vector3f velocity;
+        velocity << S(3), S(4), S(5);
+        Matrix3f rotTemp;
+        Vector3f posTemp;
+        Matrix4f resultMat;
+
+        if(omega.norm() == 0 && velocity.norm() == 0)
+        {
+            return Matrix4f::Identity();
+        }
+        if(omega.norm() == 0 && velocity.norm() != 0)
+        {
+            velocity = velocity/velocity.norm();
+            rotTemp = Matrix3f::Identity();
+            posTemp = theta*velocity;
+            for (int i = 0; i < 3; ++i)
+            {
+                for (int j = 0; j < 3; ++j)
+                {
+                    resultMat(i, j) = rotTemp(i, j);
+                }
+                resultMat(i, 3) = posTemp(i);
+                resultMat(3, i) = 0;
+            }
+            resultMat(3, 3) = 1;
+
+            return resultMat;
+        }
+        if(omega.norm() != 1)
+        {
+            omega = omega/omega.norm();
+            velocity = velocity/velocity.norm();
+            rotTemp = RotMatExp(omega, theta);
+            posTemp = (Matrix3f::Identity()*theta + (1 - cos(theta))*Skew(omega)
+                     + (theta - sin(theta))*Skew(omega)*Skew(omega))*velocity;
+            for (int i = 0; i < 3; ++i)
+            {
+                for (int j = 0; j < 3; ++j)
+                {
+                    resultMat(i, j) = rotTemp(i, j);
+                }
+                resultMat(i, 3) = posTemp(i);
+                resultMat(3, i) = 0;
+            }
+            resultMat(3, 3) = 1;
+            
+            return resultMat;
+        }
+    }
+    
 }
