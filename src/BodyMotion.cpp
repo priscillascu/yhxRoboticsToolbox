@@ -269,3 +269,39 @@ Matrix4f SE3Twist(VectorXf S, float theta)
     }
     
 }
+
+VectorXf GetTwist(Matrix4f se3)
+{
+    Matrix3f rotTemp = se3.block<3, 3>(0, 0);  // 使用block来提取矩阵，注意括号后面是起始行和列
+    Vector3f posTemp = se3.block<3, 1>(0, 3);
+
+    VectorXf resultTwist(6);
+    if(rotTemp == Matrix3f::Identity())
+    {
+        resultTwist << 0, 0, 0, posTemp/posTemp.norm();
+        return resultTwist;
+    }
+    else
+    {
+        resultTwist << GetRotAxis(rotTemp), (1/GetRotTheta(rotTemp)*Matrix3f::Identity() 
+                    - 0.5*Skew(GetRotAxis(rotTemp)) + ((1/GetRotTheta(rotTemp) 
+                    - 0.5*1/tan(GetRotTheta(rotTemp)/2)))*Skew(GetRotAxis(rotTemp))*Skew(GetRotAxis(rotTemp)))*posTemp;
+        return resultTwist;
+    }
+    
+}
+
+float GetTwistTheta(Matrix4f se3)
+{
+    Matrix3f rotTemp = se3.block<3, 3>(0, 0);
+
+    if(rotTemp == Matrix3f::Identity())
+    {
+        return 0;
+    }
+    else
+    {
+        return GetRotTheta(rotTemp);
+    }
+    
+}

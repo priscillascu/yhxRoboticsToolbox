@@ -49,4 +49,10 @@ Matrix<float, 6, 6> AdjMapMat(Matrix4f se3);
 // 使用螺旋轴求齐次变换矩阵SE3，螺旋轴为单位轴，输入螺旋轴和线速度组成的运动旋量以及旋转角度
 Matrix4f SE3Twist(VectorXf S, float theta);
 
+// 由齐次变换矩阵SE3求出螺旋轴数据
+VectorXf GetTwist(Matrix4f se3);
+
+// 求出与上一个螺旋轴对应的旋转角度
+float GetTwistTheta(Matrix4f se3);
+
 #endif
