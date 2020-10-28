@@ -1,6 +1,7 @@
 #include "BodyMotion.hpp"
+#include <stdio.h>
 
-Matrix<float, 3, 3> Skew(Vector3f p)
+Matrix<float, 3, 3> Skew(const Vector3f p)
 {
     Matrix<float, 3, 3> resultMat;
     resultMat << 0, -p(2), p(1),
@@ -134,23 +135,23 @@ float parameter1, float parameter2, float parameter3)
             resultMat(i, j) = tempRot(i, j);
         }
         resultMat(i, 3) = tempPos[i];
+        resultMat(3, 3) = 1;
     }
     return resultMat;
 }
 
-Matrix<float, 3, 3> RotMatExp(Vector3f omega, float theta)
+Matrix<float, 3, 3> RotMatExp(const Vector3f omega, float theta)
 {
     // 若输入转轴不为单位向量，则转为单位向量1
-    if(omega.norm() != 1)
-    {
-        omega = omega/omega.norm();
-    }
+    Vector3f omegaOne = omega/omega.norm();
+
     Matrix<float, 3, 3> RotMat;
-    RotMat = Matrix3f::Identity() + sin(theta)*Skew(omega) + (1 - cos(theta))*(Skew(omega)*Skew(omega));
+    RotMat = Matrix3f::Identity() + sin(theta)*Skew(omegaOne) 
+            + (1 - cos(theta))*(Skew(omegaOne)*Skew(omegaOne));
     return RotMat;
 }
 
-Vector3f GetRotAxis(Matrix3f rotmat)
+Vector3f GetRotAxis(const Matrix3f rotmat)
 {
     if(rotmat == Matrix3f::Identity())
     {
@@ -168,7 +169,7 @@ Vector3f GetRotAxis(Matrix3f rotmat)
     }
 }
 
-float GetRotTheta(Matrix3f rotmat)
+float GetRotTheta(const Matrix3f rotmat)
 {
     if(rotmat == Matrix3f::Identity())
     {
@@ -185,7 +186,7 @@ float GetRotTheta(Matrix3f rotmat)
     }
 }
 
-Matrix<float, 6, 6> AdjMapMat(Matrix4f se3)
+Matrix<float, 6, 6> AdjMapMat(const Matrix4f se3)
 {
     Matrix3f rotTemp = se3.block<3, 3>(0, 0);  // 使用block来提取矩阵，注意括号后面是起始行和列
     Vector3f posTemp = se3.block<3, 1>(0, 3);
@@ -207,7 +208,7 @@ Matrix<float, 6, 6> AdjMapMat(Matrix4f se3)
     return resultMat;
 }
 
-Matrix4f SE3Twist(VectorXf S, float theta)
+Matrix4f SE3Twist(const VectorXf S, float theta)
 {
     if(S.size() != 6)
     {
@@ -216,6 +217,7 @@ Matrix4f SE3Twist(VectorXf S, float theta)
     }
     else
     {
+        
         Vector3f omega;
         omega << S(0), S(1), S(2);
         Vector3f velocity;
@@ -270,7 +272,7 @@ Matrix4f SE3Twist(VectorXf S, float theta)
     
 }
 
-VectorXf GetTwist(Matrix4f se3)
+VectorXf GetTwist(const Matrix4f se3)
 {
     Matrix3f rotTemp = se3.block<3, 3>(0, 0);  // 使用block来提取矩阵，注意括号后面是起始行和列
     Vector3f posTemp = se3.block<3, 1>(0, 3);
@@ -291,7 +293,7 @@ VectorXf GetTwist(Matrix4f se3)
     
 }
 
-float GetTwistTheta(Matrix4f se3)
+float GetTwistTheta(const Matrix4f se3)
 {
     Matrix3f rotTemp = se3.block<3, 3>(0, 0);
 

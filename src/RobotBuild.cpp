@@ -15,15 +15,15 @@ RobotDH::RobotDH(string robot)
         cout << "Not find this robot" << endl;
         robotName = "Not Defined";
         DoF = 1;
-        theta = VectorXf(DoF);
-        d = VectorXf(DoF);
-        a = VectorXf(DoF);
-        alpha = VectorXf(DoF);
+        theta.resize(DoF);
+        // d.resize(DoF);
+        // a.resize(DoF);
+        // alpha.resize(DoF);
 
-        theta << 0;
-        d << 0;
-        a << 0;
-        alpha << 0;
+        theta(0) = 0;
+        // d << 0;
+        // a << 0;
+        // alpha << 0;
     }
     else
     {
@@ -32,14 +32,19 @@ RobotDH::RobotDH(string robot)
         case 1:
             robotName = "PUMA560";
             DoF = 6;
-            theta = VectorXf(DoF);
-            d = VectorXf(DoF);
-            a = VectorXf(DoF);
-            alpha = VectorXf(DoF);
-            theta << 0, 0, 0, 0, 0, 0;
-            d << 0, 0, 0.15005, 0.4318, 0, 0;
-            a << 0, 0.4318, 0.0203, 0, 0, 0;
-            alpha << pi/2, 0, -pi/2, pi/2, -pi/2, 0;
+            theta.resize(DoF);
+            d.resize(DoF);
+            a.resize(DoF);
+            alpha.resize(DoF);
+            theta(0) = 0;
+            theta(1) = 0;
+            theta(2) = 0;
+            theta(3) = 0;
+            theta(4) = 0;
+            theta(5) = 0;
+
+            
+        
             cout << "PUMA560 built successed!" << endl;
             break;
         
@@ -49,6 +54,12 @@ RobotDH::RobotDH(string robot)
     }
 }
 
+RobotDH::RobotDH()
+{
+    cout << "Call for constructor" << endl;
+}
+
 RobotDH::~RobotDH()
 {
+    cout << "Call for distructor" << endl;
 }
