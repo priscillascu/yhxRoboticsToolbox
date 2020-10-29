@@ -1,0 +1,35 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"files.associations": {
+			"cmath": "cpp",
+			"*.tcc": "cpp",
+			"vector": "cpp",
+			"functional": "cpp",
+			"random": "cpp",
+			"system_error": "cpp",
+			"memory": "cpp",
+			"optional": "cpp",
+			"string_view": "cpp",
+			"type_traits": "cpp",
+			"unordered_map": "cpp",
+			"dense": "cpp",
+			"iostream": "cpp",
+			"vec4b": "cpp",
+			"vec4d": "cpp",
+			"vec4f": "cpp",
+			"vec4i": "cpp",
+			"vec4s": "cpp",
+			"vec4ub": "cpp",
+			"vec4ui": "cpp",
+			"vec4us": "cpp",
+			"graphicscontext": "cpp",
+			"ostream": "cpp"
+		}
+	}
+}
