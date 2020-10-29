@@ -1,5 +1,7 @@
 # RoboticsToolbox ver.C++
 ### by YangHaixin, SCU, 941705864@qq.com
+![](https://img.shields.io/badge/language-C++-orange.svg)
+![](https://img.shields.io/badge/Data-20201029-519dd9.svg)
 ## 前言
 作为一名研究机器人方向的研究生，我最近在进行C++的学习，但苦于没有专业项目练手，故考虑使用C++对Matlab上的RoboticToolbox进行移植，一来是为了锻炼自己的C++能力，二来也顺便复习了机器人知识，希望自己能够坚持下来吧！
 
