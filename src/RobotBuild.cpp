@@ -1,8 +1,22 @@
 #include "RobotBuild.hpp"
 
-// 有参构造，根据机器人型号来给DH参数赋初值，默认是puma560机械臂，机器人型号用大写
+// 有参构造，根据机器人型号来给DH参数赋初值
 RobotDH::RobotDH(string robot)
 {
+    robotName = robot;
+}
+// 默认是puma560机械臂，机器人型号用大写
+RobotDH::RobotDH() 
+{
+    robotName = "PUMA560";
+}
+
+RobotDH::~RobotDH() {}
+
+// 机器人DH参数初始化
+void RobotDH::RobotDHInit()
+{
+    string robot = robotName;
     // 构造哈希表，建立机器人型号和数字的对应关系
     unordered_map<string, int> robotType = 
     {
@@ -16,14 +30,14 @@ RobotDH::RobotDH(string robot)
         robotName = "Not Defined";
         DoF = 1;
         theta.resize(DoF);
-        // d.resize(DoF);
-        // a.resize(DoF);
-        // alpha.resize(DoF);
+        d.resize(DoF);
+        a.resize(DoF);
+        alpha.resize(DoF);
 
         theta(0) = 0;
-        // d << 0;
-        // a << 0;
-        // alpha << 0;
+        d(0) = 0;
+        a(0) = 0;
+        alpha(0) = 0;
     }
     else
     {
@@ -36,30 +50,26 @@ RobotDH::RobotDH(string robot)
             d.resize(DoF);
             a.resize(DoF);
             alpha.resize(DoF);
-            theta(0) = 0;
-            theta(1) = 0;
-            theta(2) = 0;
-            theta(3) = 0;
-            theta(4) = 0;
-            theta(5) = 0;
 
-            
-        
-            cout << "PUMA560 built successed!" << endl;
+            theta << 0, 0, 0, 0, 0, 0;
+            d << 0, 0, 0.15005, 0.4318, 0, 0;
+            a << 0, 0.4318, 0.0203, 0, 0, 0;
+            alpha << pi/2, 0, -pi/2, pi/2, -pi/2, 0;
+
             break;
         
         default:
             break;
         }
+
+        cout << "PUMA560 built successed!" << endl;
+        cout << "**********************************" << endl;
+        cout << "**Robot Name:\t" << robotName << "\t**" << endl;
+        cout << "**DH-d:**" << endl;
+        cout << a << endl;
+        cout << "**DH-a:**" << endl;
+        cout << d << endl;
+        cout << "**DH-alpha:**" << endl;
+        cout << alpha<< endl;
     }
-}
-
-RobotDH::RobotDH()
-{
-    cout << "Call for constructor" << endl;
-}
-
-RobotDH::~RobotDH()
-{
-    cout << "Call for distructor" << endl;
 }

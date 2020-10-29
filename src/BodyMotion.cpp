@@ -1,43 +1,43 @@
 #include "BodyMotion.hpp"
 #include <stdio.h>
 
-Matrix<float, 3, 3> Skew(const Vector3f p)
+Matrix3f Skew(const Vector3f p)
 {
-    Matrix<float, 3, 3> resultMat;
+    static Matrix3f resultMat = Matrix3f::Zero();
     resultMat << 0, -p(2), p(1),
                 p(2), 0, -p(0),
                 -p(1), p(0), 0;
     return resultMat;
 }
 
-Matrix<float, 3, 3> RotX(float x)
+Matrix3f RotX(float x)
 {
-    Matrix<float, 3, 3> rotx; 
+    Matrix3f rotx = Matrix3f::Zero(); 
     rotx << 1, 0, 0,
             0, cos(x), -sin(x),
             0, sin(x), cos(x);
     return rotx;
 }
 
-Matrix<float, 3, 3> RotY(float y)
+Matrix3f RotY(float y)
 {
-    Matrix<float, 3, 3> roty;
+    Matrix3f roty = Matrix3f::Zero();
     roty << cos(y), 0, sin(y),
             0, 1, 0,
             -sin(y), 0, cos(y);
     return roty;
 }
 
-Matrix<float, 3, 3> RotZ(float z)
+Matrix3f RotZ(float z)
 {
-    Matrix<float, 3, 3> rotz;
+    Matrix3f rotz = Matrix3f::Zero();
     rotz << cos(z), -sin(z), 0,
             sin(z), cos(z), 0,
             0, 0, 1;
     return rotz;
 }
 
-Matrix<float, 3, 3> EulerRot(string rotOrder, float parameter1, float parameter2, float parameter3)
+Matrix3f EulerRot(string rotOrder, float parameter1, float parameter2, float parameter3)
 {
     // 构造哈希表，建立旋转顺序和数字的对应关系
     unordered_map<string, int> rotMethod = 
@@ -58,7 +58,7 @@ Matrix<float, 3, 3> EulerRot(string rotOrder, float parameter1, float parameter2
     // 根据输入的旋转方式对应的数字来进行矩阵乘法
     unordered_map<string, int>::const_iterator pos = rotMethod.find(rotOrder);
 
-    Matrix<float, 3, 3> rotMat;
+    Matrix3f rotMat = Matrix3f::Zero();
     if(pos == rotMethod.end())
     {
         cout << "Please enter the rotate order!" << endl;
@@ -112,21 +112,21 @@ Matrix<float, 3, 3> EulerRot(string rotOrder, float parameter1, float parameter2
     return rotMat;
 }
 
-Matrix<float, 3, 3> SE2(float x, float y, float theta)
+Matrix3f SE2(float x, float y, float theta)
 {
-    Matrix<float, 3, 3> resultMat;
+    Matrix3f resultMat = Matrix3f::Zero();
     resultMat << cos(theta), -sin(theta), x,
                 sin(theta), cos(theta), y,
                 0,          0,          1;
     return resultMat;
 }
 
-Matrix<float, 4, 4> SE3(float x, float y, float z, string strRotOrder, 
+Matrix4f SE3(float x, float y, float z, string strRotOrder, 
 float parameter1, float parameter2, float parameter3)
 {
     float tempPos[3] = {x, y, z};
-    Matrix<float, 3, 3> tempRot = EulerRot(strRotOrder, parameter1, parameter2, parameter3);
-    Matrix<float, 4, 4> resultMat;
+    Matrix3f tempRot = EulerRot(strRotOrder, parameter1, parameter2, parameter3);
+    Matrix4f resultMat = Matrix4f::Zero();
     resultMat.Identity();
     for (int i = 0; i < 3; ++i)
     {
@@ -140,12 +140,12 @@ float parameter1, float parameter2, float parameter3)
     return resultMat;
 }
 
-Matrix<float, 3, 3> RotMatExp(const Vector3f omega, float theta)
+Matrix3f RotMatExp(const Vector3f omega, float theta)
 {
     // 若输入转轴不为单位向量，则转为单位向量1
     Vector3f omegaOne = omega/omega.norm();
 
-    Matrix<float, 3, 3> RotMat;
+    static Matrix3f RotMat = Matrix3f::Zero();
     RotMat = Matrix3f::Identity() + sin(theta)*Skew(omegaOne) 
             + (1 - cos(theta))*(Skew(omegaOne)*Skew(omegaOne));
     return RotMat;
@@ -222,9 +222,9 @@ Matrix4f SE3Twist(const VectorXf S, float theta)
         omega << S(0), S(1), S(2);
         Vector3f velocity;
         velocity << S(3), S(4), S(5);
-        Matrix3f rotTemp;
+        Matrix3f rotTemp = Matrix3f::Zero();
         Vector3f posTemp;
-        Matrix4f resultMat;
+        static Matrix4f resultMat = Matrix4f::Zero();
 
         if(omega.norm() == 0 && velocity.norm() == 0)
         {
@@ -248,10 +248,10 @@ Matrix4f SE3Twist(const VectorXf S, float theta)
 
             return resultMat;
         }
-        if(omega.norm() != 1)
+        else
         {
             omega = omega/omega.norm();
-            velocity = velocity/velocity.norm();
+            //velocity = velocity/velocity.norm();
             rotTemp = RotMatExp(omega, theta);
             posTemp = (Matrix3f::Identity()*theta + (1 - cos(theta))*Skew(omega)
                      + (theta - sin(theta))*Skew(omega)*Skew(omega))*velocity;
@@ -277,7 +277,7 @@ VectorXf GetTwist(const Matrix4f se3)
     Matrix3f rotTemp = se3.block<3, 3>(0, 0);  // 使用block来提取矩阵，注意括号后面是起始行和列
     Vector3f posTemp = se3.block<3, 1>(0, 3);
 
-    VectorXf resultTwist(6);
+    static VectorXf resultTwist(6);
     if(rotTemp == Matrix3f::Identity())
     {
         resultTwist << 0, 0, 0, posTemp/posTemp.norm();
