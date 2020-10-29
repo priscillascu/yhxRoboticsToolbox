@@ -1,7 +1,7 @@
 # RoboticsToolbox ver.C++
 ### by YangHaixin, SCU, 941705864@qq.com
 ![](https://img.shields.io/badge/language-C++-orange.svg)
-![](https://img.shields.io/badge/Data-20201029-519dd9.svg)
+![](https://img.shields.io/badge/Data-20201029-blue.svg)
 ## 前言
 作为一名研究机器人方向的研究生，我最近在进行C++的学习，但苦于没有专业项目练手，故考虑使用C++对Matlab上的RoboticToolbox进行移植，一来是为了锻炼自己的C++能力，二来也顺便复习了机器人知识，希望自己能够坚持下来吧！
 
@@ -80,5 +80,14 @@
 - Eigen作为函数形参，进行值传递时，官网建议使用`const`的形式来进行值传递，我已经将之前的函数进行了修改
 - 变量的声明和定义写近一点，声明矩阵变量后，注意定义的时候是否有没有赋值的元素？建议矩阵在声明的时候直接定义成0矩阵
 - 遇到问题不要慌着认为是库的问题，检查一下自己的**语法**和**逻辑**
+
+除此之外，今天还学习了怎么在markdown的readme中，增加图标功能，我在本文档的开头增加了语言和更新日期的图标，非常简单，需要使用[Shield.io](https://shields.io/category/version)网站，来生产一个代码：
+```
+![](https://img.shields.io/badge/language-C++-orange.svg)
+```
+其中，badge后面就是标签的头、尾、颜色了，非常简单。还可以利用[Simple Icons](https://simpleicons.org/?q=linux)网站来获得图标名字，直接增加一个logo项，即可增加图标了
+```
+![](https://img.shields.io/badge/Linux-Ubuntu-orange?style=flat&logo=Linux&logoColor=ffffff)
+```
 
 **MakeFile**
