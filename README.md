@@ -1,16 +1,14 @@
 # RoboticsToolbox ver.C++
 ### by YangHaixin, SCU, 941705864@qq.com
-![](https://img.shields.io/badge/language-C++-orange.svg)
-![](https://img.shields.io/badge/OS-Ubuntu18.0.4-blue.svg)
+![](https://img.shields.io/badge/Language-C++-blue.svg)
+![](https://img.shields.io/badge/Ubuntu-18.0.4-orange?style=flat&logo=Ubuntu&logoColor=ffffff)
+![](https://img.shields.io/badge/Editor-VS%20Code-blueviolet?style=flat&logo=Visual%20Studio%20Code&logoColor=ffffff)
+![](https://img.shields.io/badge/Based-Eigen-red?style=flat&logo=Matrix&logoColor=ffffff)
 ## 前言
 作为一名研究机器人方向的研究生，我最近在进行C++的学习，但苦于没有专业项目练手，故考虑使用C++对Matlab上的RoboticToolbox进行移植，一来是为了锻炼自己的C++能力，二来也顺便复习了机器人知识，希望自己能够坚持下来吧！
 
-开发平台和语音:`Ubuntu18.0.4` `C++`
-编辑器:`VS Code`(Vim虽然配置好了，但是还是不太习惯)
-目前使用到的第三方库:`Eigen`
 **在我完成这个库之前，本文档是我的开发日志和心得体会**
 
-最近更新：2020年10月22日
 ## 开发日志 
 ### 2020.10.22
 开始了移植工作，此时离我完成C++大致学习过了３天，目前将会使用到`Eigen`这个库来帮助我进行矩阵运算。今天因为有课，还有做项目的关系，只写了个欧拉角求旋转矩阵的函数`EulerRot`。
