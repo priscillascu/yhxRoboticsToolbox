@@ -92,4 +92,8 @@
 
 **MakeFile**
 
-简单写了一下Makefile，直接在其路径下使用`make`命令即可自动运行Makefile，自动编译，对于没有修改的文件还可以不重复编译，比我之前直接g++ -o xxxxxxxxxx快了一些，方便得多了，以后增加了文件只需要修改一下Makefile即可。
+简单写了一下Makefile，直接在其路径下使用`make`命令即可自动运行Makefile，自动编译，对于没有修改的文件还可以不重复编译，比我之前直接g++ -o xxxxxxxxxx快了一些，方便得多了，以后增加了文件只需要修改一下Makefile即可，如果要增加GDB调试，则只需要在可执行文件链接的那一句在文件名之后再加上-g
+```makefile
+bin/robot: obj/main.o obj/BodyMotion.o obj/RobotBuild.o
+	g++ -o bin/robot -g obj/main.o obj/BodyMotion.o obj/RobotBuild.o 
+```
