@@ -11,11 +11,12 @@
 #include <string>
 #include <unordered_map>
 
-#define pi 3.141592653
+
 
 using namespace std;
 using namespace Eigen;
 
+const double pi  = 3.141592653;
 // 由三维向量求得对应的反对称矩阵(叉乘矩阵)
 Matrix<float, 3, 3> Skew(const Vector3f p);
 

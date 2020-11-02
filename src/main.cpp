@@ -24,6 +24,40 @@ int main()
     cout << p560->robotName << endl;
     cout << p560->alpha << endl;
     
+    RobotTwist *UR5 = new RobotTwist("UR5");
+    UR5->RobotTwistInit();  // 此时会提示请自行创建
+    // UR5连杆数据，用于创建旋量
+    float W1 = 0.109;
+    float W2 = 0.082;
+    float L1 = 0.425;
+    float L2 = 0.392;
+    float H1 = 0.089;
+    float H2 = 0.095;
+    UR5->DoF = 6;
+    UR5->initSE3 << -1, 0, 0, L1 + L2,
+                    0, 0, 1, W1 + W2,
+                    0, 1, 0, H1 - H2,
+                    0, 0, 0, 1;
+    UR5->omega.resize(3*UR5->DoF);
+    UR5->omega << 0, 0, 1,
+                0, 1, 0,
+                0, 1, 0, 
+                0, 1, 0, 
+                0, 0, -1, 
+                0, 1, 0;
+    UR5->velocity.resize(3*UR5->DoF);
+    UR5->velocity << 0, 0, 0, 
+                -H1, 0, 0, 
+                -H1, 0, L1, 
+                -H1, 0, L1+L2, 
+                -W1, L1+L2, 0, 
+                H2-H1, 0, L1+L2;
+    UR5->theta.resize(UR5->DoF);
+    UR5->theta << 0, -pi/2, 0, 0, pi/2, 0;
+    cout << UR5->omega << "\n" << UR5->velocity << endl;
+    cout << UR5->FKTwist() << endl;
+
     delete p560;
+    delete UR5;
     return 0;
 }

@@ -1,9 +1,8 @@
 #include "BodyMotion.hpp"
-#include <stdio.h>
 
 Matrix3f Skew(const Vector3f p)
 {
-    static Matrix3f resultMat = Matrix3f::Zero();
+    Matrix3f resultMat = Matrix3f::Zero();
     resultMat << 0, -p(2), p(1),
                 p(2), 0, -p(0),
                 -p(1), p(0), 0;
@@ -145,12 +144,12 @@ Matrix3f RotMatExp(const Vector3f omega, float theta)
     // 若输入转轴不为单位向量，则转为单位向量1
     Vector3f omegaOne = omega/omega.norm();
 
-    static Matrix3f RotMat = Matrix3f::Zero();
+    Matrix3f RotMat = Matrix3f::Zero();
     RotMat = Matrix3f::Identity() + sin(theta)*Skew(omegaOne) 
             + (1 - cos(theta))*(Skew(omegaOne)*Skew(omegaOne));
     return RotMat;
 }
-
+//
 Vector3f GetRotAxis(const Matrix3f rotmat)
 {
     if(rotmat == Matrix3f::Identity())
@@ -224,7 +223,7 @@ Matrix4f SE3Twist(const VectorXf S, float theta)
         velocity << S(3), S(4), S(5);
         Matrix3f rotTemp = Matrix3f::Zero();
         Vector3f posTemp;
-        static Matrix4f resultMat = Matrix4f::Zero();
+        Matrix4f resultMat = Matrix4f::Zero();
 
         if(omega.norm() == 0 && velocity.norm() == 0)
         {
@@ -277,7 +276,7 @@ VectorXf GetTwist(const Matrix4f se3)
     Matrix3f rotTemp = se3.block<3, 3>(0, 0);  // 使用block来提取矩阵，注意括号后面是起始行和列
     Vector3f posTemp = se3.block<3, 1>(0, 3);
 
-    static VectorXf resultTwist(6);
+    VectorXf resultTwist(6);
     if(rotTemp == Matrix3f::Identity())
     {
         resultTwist << 0, 0, 0, posTemp/posTemp.norm();
