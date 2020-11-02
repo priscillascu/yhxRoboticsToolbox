@@ -1,5 +1,5 @@
 # RoboticsToolbox ver.C++
-### by YangHaixin, SCU, [联系我](941705864@qq.com)
+### by YangHaixin, SCU, [联系我](https://blog.csdn.net/sinat_38887014?spm=1001.2014.3001.5113)
 ![](https://img.shields.io/badge/Language-C++-blue.svg)
 ![](https://img.shields.io/badge/Ubuntu-18.0.4-orange?style=flat&logo=Ubuntu&logoColor=ffffff)
 ![](https://img.shields.io/badge/Editor-VS%20Code-blueviolet?style=flat&logo=Visual%20Studio%20Code&logoColor=ffffff)
@@ -30,7 +30,7 @@
 
 今天就到这里了，周末在家果然不适合学习，再加上导师最近也安排了一些控制理论的学习任务，还是要平衡一下工作节奏。
 
-## 2020.10.27
+## 2020.10.26
 今天比较忙，上午才慢悠悠返校，下午批改了数据库的作业，顺便学习了一下SQL Server的用法，感觉可以使用数据库存放机械臂信息，然后调用相应数据来进行运动学、动力学计算。今天就只有晚上稍微写了一下代码，还搞忘了一些概念，看了会儿书。
 
 **今日更新**
