@@ -92,8 +92,35 @@
 
 **MakeFile**
 
-简单写了一下Makefile，直接在其路径下使用`make`命令即可自动运行Makefile，自动编译，对于没有修改的文件还可以不重复编译，比我之前直接g++ -o xxxxxxxxxx快了一些，方便得多了，以后增加了文件只需要修改一下Makefile即可，如果要增加GDB调试，则只需要在可执行文件链接的那一句在文件名之后再加上-g
+简单写了一下Makefile，直接在其路径下使用`make`命令即可自动运行Makefile，自动编译，对于没有修改的文件还可以不重复编译，比我之前直接g++ -o xxxxxxxxxx快了一些，方便得多了，以后增加了文件只需要修改一下Makefile即可，如果要增加GDB调试，则需要在可执行文件链接的那一句在文件名之后再加上-g
 ```makefile
 bin/robot: obj/main.o obj/BodyMotion.o obj/RobotBuild.o
 	g++ -o bin/robot -g obj/main.o obj/BodyMotion.o obj/RobotBuild.o 
+
+obj/main.o: src/main.cpp src/BodyMotion.hpp src/RobotBuild.hpp
+	g++ -c -g src/main.cpp -o obj/main.o
+
+obj/BodyMotion.o: src/BodyMotion.cpp src/BodyMotion.hpp
+	g++ -c -g src/BodyMotion.cpp -o obj/BodyMotion.o
+
+obj/RobotBuild.o: src/RobotBuild.cpp src/BodyMotion.hpp src/RobotBuild.hpp
+	g++ -c -g src/RobotBuild.cpp -o obj/RobotBuild.o
+
 ```
+
+### 2020.11.02
+
+周末去重庆找女朋友玩了。今天上午把以前的笔记本拿去修了，下午做实验，晚上稍微写了点。
+
+**今日更新**
+
+- `RobotTwist`类，通过旋量来构建机器人模型，该方法比DH参数法更优越；
+- `RobotTwist::FKTwist`函数，该函数是在旋量机器人模型类中的成员函数，可以用来计算基于指数积模型的正运动学，目前验证是正确的；
+- 修正了之前代码无用的`static`声明，因为我不会使用局部变量地址、引用来作为返回值，故不需要。
+
+更新的有点少，精力有限，慢慢来吧。
+
+**学习总结**
+
+- Eigen库的可变大小类，如`VectorXf`，在赋值之前，需要对其大小进行声明，否则容易出错；
+- 对`Vector`类进行截取时，不能像Matlab那样直接V(i, j)，而是要使用segment函数`omega.segment(3*(DoF - 1 - i), 3)`截取omega的3*(DoF-1-i)开始的３个元素。
