@@ -141,3 +141,15 @@ obj/RobotBuild.o: src/RobotBuild.cpp src/BodyMotion.hpp src/RobotBuild.hpp
 - 动态向量不能使用`Zero()`进行赋值，该方法只能用于静态向量。
 
 对了，这几天还把我的旧笔记本拿去修理了，我想把它配置成一个Linux服务器，然后搞一些折腾自己的骚操作，顺便学习一下服务器、计网……希望一切顺利吧。
+
+## 2020.11.04
+啊这，昨天没来得及写，因为服务器上一直没clone下来这个库😂
+
+出于安全和需求的考虑，我还是买了腾讯云的服务器来玩。费了九牛二虎之力，踩了好几个坑，终于用VSCode远程连接上了，并配置好了我的这个库的开发环境，可以在Windows下进行开发咯。详细信息在我的博客可看[远程连接配置](https://blog.csdn.net/sinat_38887014/article/details/109500709)
+
+**踩坑实况**
+- SSH，因为我之前对SSH不是很了解，所以在配置以SSH远程连接的时候，一脸懵逼，后来才知道了，同一个文件夹中可以放多个不同名的SSH公钥私钥，然后公钥是给远程端的，私钥是放在本地，远程端连接时拿来验证的，所以需要知道私钥的绝对路径；
+- config，在写连接的config文件时，我对其user这一项也很懵逼，后来经过我的测试，user这一项就是填写你的服务器里的用户名，root好像不行，所以我就用了服务器默认的lighthouse；
+- eigen，在新环境中安装eigen库，我使用`sudo apt install libeigen3-dev`，此时它会将`Eigen`安装到一个`/usr/include/eigen3`文件夹下，如果直接使用`#include <Eigen>`则会报错，需要改为`#include <eigen3/Eigen>`，但是这样的话就需要改很多头文件引用，所以直接将`Eigen`复制到include文件夹中，`sudo cp -r Eigen ../Eigen`
+
+接下来就是继续在服务器上写该机器人库咯。
