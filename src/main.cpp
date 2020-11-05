@@ -1,6 +1,7 @@
 #include <iostream>
 #include "BodyMotion.hpp"
 #include "RobotBuild.hpp"
+#include "Kinematics.hpp"
 
 using namespace std;
 
@@ -54,16 +55,12 @@ int main()
                 H2-H1, 0, L1+L2;
     
     UR5->theta << 0, -pi/2, 0, 0, pi/2, 0;
-    cout << UR5->omega << "\n" << UR5->qAxis << endl;
-    cout << UR5->FKSpace() << endl;
-    cout << UR5->FKBody() << endl;
-    cout << UR5->JacobianSpace() << endl;
-    cout << "*******************" << endl;
-    cout << AdjMapMat(UR5->FKSpace())*UR5->JacobianBody() << endl;
-    cout << "*******************" << endl;
-    cout << UR5->JacobianBody() << endl;
-    cout << "-------------------" << endl;
-    cout << AdjMapMat(UR5->FKSpace().inverse())*UR5->JacobianSpace() << endl;
+    
+    cout << "****Foward Kinematics****" << endl;
+    cout << FKSpace(*UR5) << endl;
+
+    cout << "****Space Jacobian****" << endl;
+    cout << JacobianSpace(*UR5) << endl;
     delete p560;
     delete UR5;
     return 0;
