@@ -173,3 +173,6 @@ obj/RobotBuild.o: src/RobotBuild.cpp src/BodyMotion.hpp src/RobotBuild.hpp
 
 **今日更新**
 - `VectorXf IKNewton(RobotTwist &robot, const Matrix4f target, VectorXf initAng)`：通过输入机器人对象、目标矩阵、初始角度，即可开始通过牛顿迭代法进行求逆，现在还有bug
+
+**Debug**
+- 大概知道问题所在了，是一个小数精度的问题。在matlab中，是默认保存4位小数，所以非常方便，但是C++中则有很多位，比如我的一个旋转矩阵为`{1, 5.51380253e-05, 1.37014342e-06, -5.51380035e-05, 1.00000012, -1.44393043e-05, -1.37093969e-06, 1.44392261e-05, 1.00000012}`，理论上这个矩阵是一个单位阵了，但是此时因为精度问题，其不仅不是一个单位阵，还出现了迹tr>3的情况，这样就会导致后面使用acos函数出错，接下来就想办法把这种很小很小的小数给省略了
