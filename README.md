@@ -167,3 +167,9 @@ obj/RobotBuild.o: src/RobotBuild.cpp src/BodyMotion.hpp src/RobotBuild.hpp
 
 - 将正运动学、微分运动学单独写到一个新的头文件和源文件中：`Kinematics`
 - 将正运动学、微分运动学移除出机器人类
+
+## 2020.11.06
+今天写了个逆运动学的雏形，理论上是没有问题的，但是还是有bug，会出现nan的结果，根据我调试时看到的情况，进过迭代后，末端位姿与目标位姿之间的差值其实已经很小了，但是解算成旋量时出现了一些问题，现在准备从我的结算旋量算法开始入手debug。
+
+**今日更新**
+- `VectorXf IKNewton(RobotTwist &robot, const Matrix4f target, VectorXf initAng)`：通过输入机器人对象、目标矩阵、初始角度，即可开始通过牛顿迭代法进行求逆，现在还有bug
