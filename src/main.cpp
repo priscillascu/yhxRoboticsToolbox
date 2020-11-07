@@ -6,62 +6,57 @@
 using namespace std;
 
 int main()
-{
-    Matrix4f R1 = SE3(1, 2, 3, "xyz", pi/5, pi/3, pi/4);
-    cout << "R1 = \n" << R1 << endl;
-    
-    VectorXf v = GetTwist(R1);
-    float th1 = GetTwistTheta(R1);
-    cout << v << "\t" << th1 << endl;
+{   
+    RobotTwist *p560 = new RobotTwist("PUMA560");
+    p560->RobotTwistInit(6);
 
-    Matrix4f R2 = SE3Twist(v, th1);
-    
-    cout << "R2 = \n" << R2 << endl;
-    cout << v << "\t" << th1 << endl;
-    
-    RobotDH *p560 = new RobotDH("PUMA560");
-    p560->RobotDHInit();
+    /*
+    ************************正运动学验证**********************************
+    选取三组不同的关节角，与Matlab对比，验证了机械臂旋量模型、正运动学算法正确性
+    */
+    p560->theta << 0, 0, 0, 0, 0, 0;
+    cout << "Space Forward Kinematics at qz is \n" << FKSpace(*p560) << endl;
+    cout << "Body Forward Kinematics at qz is \n" << FKBody(*p560) << endl;
 
-    cout << p560->robotName << endl;
-    cout << p560->alpha << endl;
-    
-    RobotTwist *UR5 = new RobotTwist("UR5");
-    UR5->RobotTwistInit(6);  // 此时会提示请自行创建
-    // UR5连杆数据，用于创建旋量
-    float W1 = 0.109;
-    float W2 = 0.082;
-    float L1 = 0.425;
-    float L2 = 0.392;
-    float H1 = 0.089;
-    float H2 = 0.095;
-    
-    UR5->initSE3 << -1, 0, 0, L1 + L2,
-                    0, 0, 1, W1 + W2,
-                    0, 1, 0, H1 - H2,
-                    0, 0, 0, 1;
-    
-    UR5->omega << 0, 0, 1,
-                0, 1, 0,
-                0, 1, 0, 
-                0, 1, 0, 
-                0, 0, -1, 
-                0, 1, 0;
-    
-    UR5->qAxis << 0, 0, 0, 
-                -H1, 0, 0, 
-                -H1, 0, L1, 
-                -H1, 0, L1+L2, 
-                -W1, L1+L2, 0, 
-                H2-H1, 0, L1+L2;
-    
-    UR5->theta << 0, -pi/2, 0, 0, pi/2, 0;
-    
-    cout << "****Foward Kinematics****" << endl;
-    cout << FKSpace(*UR5) << endl;
+    p560->theta << 0, pi/2, -pi/2, 0, 0, 0;
+    cout << "Space Forward Kinematics at qr is \n" << FKSpace(*p560) << endl;
+    cout << "Body Forward Kinematics at qr is \n" << FKBody(*p560) << endl;
 
-    cout << "****Space Jacobian****" << endl;
-    cout << JacobianSpace(*UR5) << endl;
+    p560->theta << 0, pi/4, -pi, 0, pi/4, 0;
+    cout << "Space Forward Kinematics at qn is \n" << FKSpace(*p560) << endl;
+    cout << "Body Forward Kinematics at qn is \n" << FKBody(*p560) << endl;
+
+    /*
+    ************************雅可比验证**********************************
+    选取三组不同的关节角，与Matlab对比，验证了机械臂旋量模型、雅可比算法正确性
+    */
+    p560->theta << 0, 0, 0, 0, 0, 0;
+    cout << "Space Jacobian at qz is \n" << JacobianSpace(*p560) << endl;
+    cout << "Body Jacobian at qz is \n" << JacobianBody(*p560) << endl;
+
+    p560->theta << 0, pi/2, -pi/2, 0, 0, 0;
+    cout << "Space Jacobian at qr is \n" << JacobianSpace(*p560) << endl;
+    cout << "Body Jacobian at qr is \n" << JacobianBody(*p560) << endl;
+    
+
+    p560->theta << 0, pi/4, -pi, 0, pi/4, 0;
+    cout << "Space Jacobian at qn is \n" << JacobianSpace(*p560) << endl;
+    cout << "Body Jacobian at qn is \n" << JacobianBody(*p560) << endl;
+
+    /*
+    ************************逆运动学验证**********************************
+    逆运动学验证，多组位姿，注意需要避开奇异点，且初始角度不能相差太大，<0.5rad
+    */
+    VectorXf initAng(6);
+    initAng << 0.1, 0.5, 0, 0.1, 0.5, 0.1;
+    Matrix4f target = FKSpace(*p560);
+    cout << "Inverse Kinematics is " << IKNewton(*p560, target, initAng) << endl;
+
+    p560->theta << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6;
+    target = FKSpace(*p560);
+    initAng << 0, 0, 0.5, 0.5, 0.5, 0.5;
+    cout << "Inverse Kinematics is " << IKNewton(*p560, target, initAng) << endl;
+    
     delete p560;
-    delete UR5;
     return 0;
 }

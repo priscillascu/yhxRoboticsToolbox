@@ -86,6 +86,7 @@ void RobotTwist::RobotTwistInit(int dof)
     unordered_map<string, int> robotType = 
     {
         {"CRP14", 1},
+        {"PUMA560", 2}
     };
     // 根据输入的机器人名字来选择对应的机器人数据
     unordered_map<string, int>::const_iterator type = robotType.find(robot);
@@ -99,6 +100,7 @@ void RobotTwist::RobotTwistInit(int dof)
         switch (type->second)
         {
         case 1:
+        {
             robotName = "CRP14";
             DoF = 6;
             theta.resize(DoF);
@@ -114,12 +116,41 @@ void RobotTwist::RobotTwistInit(int dof)
                     0, 0, -1;
             qAxis <<  0, 0, 0,
                     169.9876, 0, -0.0121,
-                    170,0136, 0, 613.9879,
+                    170.0136, 0, 613.9879,
                     0, -0.0112, 814.0441,
                     810.0109, 0, 814.0039,
                     810.0018, 0, 0;
-
             break;
+        }
+
+        case 2:
+        {
+            robotName = "PUMA560";
+            DoF = 6;
+            theta.resize(DoF);
+            omega.resize(3*DoF);
+            qAxis.resize(3*DoF);
+            velocity.resize(3*DoF);
+
+            theta << 0, 0, 0, 0, 0, 0;
+            omega << 0, 0, 1,
+                    0, -1, 0,
+                    0, -1, 0,
+                    0, 0, 1,
+                    0, -1, 0,
+                    0, 0, 1;
+            qAxis <<  0, 0, 0,
+                    0, 0, 0,
+                    431.8, 0, 0,
+                    452.1, -150, 0,
+                    452.1, -150, 431.8,
+                    452.1, -150, 431.8;
+            initSE3 << 1, 0, 0, 452.1,
+                        0, 1, 0, -150,
+                        0, 0, 1, 431.8,
+                        0, 0, 0, 1;
+            break;
+        }  
         
         default:
             break;

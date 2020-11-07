@@ -157,7 +157,7 @@ Vector3f GetRotAxis(const Matrix3f rotmat)
         cout << "Rotate Axis is Undefined" << endl;
         return Vector3f(0, 0, 0);
     }
-    else if(rotmat.trace() == 1)
+    else if(rotmat.trace() == -1)
     {
         return 1/sqrt(2*(1+rotmat(2, 2)))*Vector3f(rotmat(0, 2), rotmat(1, 2), 1 + rotmat(2, 2));
     }
@@ -175,7 +175,7 @@ float GetRotTheta(const Matrix3f rotmat)
         cout << "No rotation happened" << endl;
         return 0;
     }
-    else if(rotmat.trace() == 1)
+    else if(rotmat.trace() == -1)
     {
         return pi;
     }
@@ -277,7 +277,7 @@ VectorXf GetTwist(const Matrix4f se3)
     Vector3f posTemp = se3.block<3, 1>(0, 3);
 
     VectorXf resultTwist(6);
-    if(rotTemp == Matrix3f::Identity())
+    if((rotTemp - Matrix3f::Identity()).norm() < 0.0001)
     {
         resultTwist << 0, 0, 0, posTemp/posTemp.norm();
         return resultTwist;
@@ -286,7 +286,7 @@ VectorXf GetTwist(const Matrix4f se3)
     {
         resultTwist << GetRotAxis(rotTemp), (1/GetRotTheta(rotTemp)*Matrix3f::Identity() 
                     - 0.5*Skew(GetRotAxis(rotTemp)) + ((1/GetRotTheta(rotTemp) 
-                    - 0.5*1/tan(GetRotTheta(rotTemp)/2)))*Skew(GetRotAxis(rotTemp))*Skew(GetRotAxis(rotTemp)))*posTemp;
+                    - 0.5*(1/tan(GetRotTheta(rotTemp)/2))))*Skew(GetRotAxis(rotTemp))*Skew(GetRotAxis(rotTemp)))*posTemp;
         return resultTwist;
     }
     
@@ -295,10 +295,11 @@ VectorXf GetTwist(const Matrix4f se3)
 float GetTwistTheta(const Matrix4f se3)
 {
     Matrix3f rotTemp = se3.block<3, 3>(0, 0);
+    Vector3f posTemp = se3.block<3, 1>(0, 3);
 
-    if(rotTemp == Matrix3f::Identity())
+    if((rotTemp - Matrix3f::Identity()).norm() < 0.0001)
     {
-        return 0;
+        return posTemp.norm();
     }
     else
     {

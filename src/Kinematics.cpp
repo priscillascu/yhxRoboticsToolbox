@@ -7,7 +7,7 @@ Matrix4f FKSpace(RobotTwist &robot)
     tempSE3 = robot.initSE3;
     for (int i = 0; i < robot.DoF; ++i)
     {
-        robot.velocity.segment(3*i, 3) = Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
+        robot.velocity.segment(3*i, 3) = -Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
         // 当角度为０时，该角度对应的旋量齐次变换矩阵为单位阵，无需再计算
         if(robot.theta(robot.DoF - 1 - i) == 0)
         {
@@ -31,7 +31,7 @@ Matrix4f FKBody(RobotTwist &robot)
     Matrix<float, 6, 6> AdM = AdjMapMat(robot.initSE3.inverse());
     for (int i = 0; i < robot.DoF; ++i)
     {
-        robot.velocity.segment(3*i, 3) = Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
+        robot.velocity.segment(3*i, 3) = -Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
         // 当角度为０时，该角度对应的旋量齐次变换矩阵为单位阵，无需再计算
         if(robot.theta(i) == 0)
         {
@@ -46,10 +46,8 @@ Matrix4f FKBody(RobotTwist &robot)
     return tempSE3;
 }
 
-Matrix<float, 6, 6> JacobianSpace(RobotTwist &robot)
+Matrix<float, 6, Dynamic> JacobianSpace(RobotTwist &robot)
 {
-    
-
     VectorXf curS(6);
     VectorXf preS(6);
 
@@ -58,12 +56,12 @@ Matrix<float, 6, 6> JacobianSpace(RobotTwist &robot)
 
     Matrix4f tempT = Matrix4f::Identity();
 
-    VectorXf Js(6);
+    VectorXf Js(robot.DoF);
     // Js = VectorXf::Zero();  // 请勿使用Zero给向量赋初值，只能给静态向量赋初值
 
     for (int i = 0; i < robot.DoF; ++i)
     {
-        robot.velocity.segment(3*i, 3) = Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
+        robot.velocity.segment(3*i, 3) = -Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
         preS = curS;
         curS << robot.omega.segment(3*i, 3), robot.velocity.segment(3*i, 3);
         
@@ -83,7 +81,7 @@ Matrix<float, 6, 6> JacobianSpace(RobotTwist &robot)
     return resultMat;
 }
 
-Matrix<float, 6, 6> JacobianBody(RobotTwist &robot)
+Matrix<float, 6, Dynamic> JacobianBody(RobotTwist &robot)
 {
     Matrix<float, 6, 6> AdM = AdjMapMat(robot.initSE3.inverse());
     
@@ -95,12 +93,12 @@ Matrix<float, 6, 6> JacobianBody(RobotTwist &robot)
     Matrix<float, 6, 6> resultMat;
     resultMat = Matrix<float, 6, 6>::Zero();
 
-    VectorXf Js(6);
+    VectorXf Js(robot.DoF);
     // Js = VectorXf::Zero();  // 请勿使用Zero给向量赋初值，只能给静态向量赋初值
 
     for (int i = robot.DoF - 1; i >= 0; --i)
     {
-        robot.velocity.segment(3*i, 3) = Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
+        robot.velocity.segment(3*i, 3) = -Skew(robot.omega.segment(3*i, 3))*robot.qAxis.segment(3*i, 3);
         preS = curS;
         curS << robot.omega.segment(3*i, 3), robot.velocity.segment(3*i, 3);
         curS = AdM*curS;
@@ -120,7 +118,34 @@ Matrix<float, 6, 6> JacobianBody(RobotTwist &robot)
     return resultMat;
 }
 
-VectorXf IKNewton(RobotTwist &robot, const Matrix4f Target, VectorXf *initAng)
+VectorXf IKNewton(RobotTwist &robot, const Matrix4f target, VectorXf initAng)
 {
-    
+    Matrix4f tarBody;  // 目标位姿在末端坐标系中的表示，随着末端坐标系改变而改变
+    VectorXf Vb(6);   // 末端坐标系下的运动旋量
+    Matrix<float, 6, Dynamic> Jb;  // 物体雅可比
+    Matrix<float, 6, Dynamic> JbInv;  // 物体雅可比的伪逆
+    VectorXf thetaNext(robot.DoF);  // 更新后的角度值
+    thetaNext = initAng;
+
+
+
+    for(int i = 0; i < 1000; ++i)
+    {
+        robot.theta = thetaNext;
+        tarBody = FKSpace(robot).inverse()*target;
+        Vb = GetTwistTheta(tarBody)*GetTwist(tarBody);
+        if(Vb.norm() < 0.0001)
+        {
+            break;
+        }
+
+        Jb = JacobianBody(robot);
+
+        robot.DoF <= 6 ? JbInv = (Jb.transpose()*Jb).inverse()*Jb.transpose() : JbInv = Jb.transpose()*(Jb*Jb.transpose()).inverse();
+        
+        thetaNext = thetaNext + JbInv*Vb;
+        cout << "Calculation " << i << "\t" << Vb.norm() << endl;
+    }
+
+    return thetaNext;
 }

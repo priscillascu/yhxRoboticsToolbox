@@ -38,7 +38,7 @@ float parameter1 = 0, float parameter2 = 0, float parameter3 = 0);
 // 基于Rodrigues' formula的旋转矩阵求解，输入旋转轴和旋转角度，旋转轴为单位轴
 Matrix<float, 3, 3> RotMatExp(const Vector3f omega, float theta = 0);
 
-// 由旋转矩阵反解出空间旋转轴，矩阵对数
+// 由旋转矩阵反解出空间旋转轴，矩阵对数，结果为一个单位长度的旋转轴向量
 Vector3f GetRotAxis(const Matrix3f rotmat);
 
 // 由旋转矩阵反解出绕空间中单轴旋转的角度，矩阵对数
