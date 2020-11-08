@@ -213,5 +213,7 @@ $J^{-1}=(J^T*J)^{-1}J^T$
 白天出去玩了，或许这就是周末吧，他妈的晚上开组会开到十点我是真没想到，今天又荒废了，不过还好，学会了一个github pull加速的骚操作，非常简单：
 - 利用其镜像网站`github.com.cnpmjs.org`，替换将要pull的地址中的`github.com`，即可实现加速
 
-于是今晚我就pull了一个hexo的主题，`sudo git clone https://github.com.cnpmjs.org/viosey/hexo-theme-material.git material`，今晚就配置一下我exo
+于是今晚我就pull了一个hexo的yilia主题，
+```sudo git clone https://github.com.cnpmjs.org/litten/hexo-theme-yilia.git yilia```
+今晚就配置一下我hexo吧！
 
