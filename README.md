@@ -1,5 +1,5 @@
 # RoboticsToolbox ver.C++
-### by YangHaixin, SCU, [联系我](https://blog.csdn.net/sinat_38887014?spm=1001.2014.3001.5113)
+### by YangHaixin, SCU, [我的CSDN](https://blog.csdn.net/sinat_38887014?spm=1001.2014.3001.5113)，[个人博客](www.yanghaixin.cn)
 ![](https://img.shields.io/badge/Language-C++-blue.svg)
 ![](https://img.shields.io/badge/Ubuntu-18.0.4-orange?style=flat&logo=Ubuntu&logoColor=ffffff)
 ![](https://img.shields.io/badge/Editor-VS%20Code-blueviolet?style=flat&logo=Visual%20Studio%20Code&logoColor=ffffff)
@@ -208,4 +208,10 @@ $J^{-1}=(J^T*J)^{-1}J^T$
 
 这也让我对机械臂奇异位形有了更深的理解，在奇异位形下，雅可比奇异，有多个关节贡献同样的末端运动旋量分量，这就导致了某些关节无法求解。
 
+## 2020.11.08
+
+白天出去玩了，或许这就是周末吧，他妈的晚上开组会开到十点我是真没想到，今天又荒废了，不过还好，学会了一个github pull加速的骚操作，非常简单：
+- 利用其镜像网站`github.com.cnpmjs.org`，替换将要pull的地址中的`github.com`，即可实现加速
+
+于是今晚我就pull了一个hexo的主题，`sudo git clone https://github.com.cnpmjs.org/viosey/hexo-theme-material.git material`，今晚就配置一下我exo
 
