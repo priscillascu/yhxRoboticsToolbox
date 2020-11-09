@@ -217,3 +217,9 @@ $J^{-1}=(J^T*J)^{-1}J^T$
 ```sudo git clone https://github.com.cnpmjs.org/litten/hexo-theme-yilia.git yilia```
 今晚就配置一下我hexo吧！
 
+## 2020.11.09
+
+今天啥都没干，唉。唯一的进展就是把个人博客搭好了，直接往里面写文章就行了。
+
+明天还要去卡诺普公司交流，希望能够针对工业机器人面对的真实困难进行研究，不想再只纸上谈兵了，想做点真实的。
+
