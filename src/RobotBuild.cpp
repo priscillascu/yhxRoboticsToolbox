@@ -58,8 +58,6 @@ void RobotDH::RobotDHInit()
     }
 }
 
-
-
 RobotTwist::RobotTwist(string robot)
 {
     robotName = robot;
@@ -132,6 +130,11 @@ void RobotTwist::RobotTwistInit(int dof)
             qAxis.resize(3*DoF);
             velocity.resize(3*DoF);
 
+            mass.resize(DoF);
+            Inertia.resize(3*DoF, 3);
+            dTheta.resize(DoF);
+            ddTheta.resize(DoF);
+
             theta << 0, 0, 0, 0, 0, 0;
             omega << 0, 0, 1,
                     0, -1, 0,
@@ -149,6 +152,28 @@ void RobotTwist::RobotTwistInit(int dof)
                         0, 1, 0, -150,
                         0, 0, 1, 431.8,
                         0, 0, 0, 1;
+
+            mass << 0, 17.4, 4.8, 0.82, 0.34, 0.09;
+            Inertia << 0, 0, 0, 
+                        0, 0.35, 0,
+                        0, 0, 0,
+                        0.13, 0, 0,
+                        0, 0.524, 0,
+                        0, 0, 0.539,
+                        0.066, 0, 0,
+                        0, 0.086, 0,
+                        0, 0, 0.0125,
+                        0.0018, 0, 0,
+                        0, 0.0013, 0,
+                        0, 0, 0.0018,
+                        0.0003, 0, 0,
+                        0, 0.0004, 0,
+                        0, 0, 0.0003,
+                        0.00015, 0, 0,
+                        0, 0.00015, 0,
+                        0, 0, 0.00004;
+            dTheta << 0, 0, 0, 0, 0, 0;
+            ddTheta << 0, 0, 0, 0, 0, 0;
             break;
         }  
         

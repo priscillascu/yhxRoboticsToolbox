@@ -11,6 +11,8 @@
 using namespace std;
 using namespace Eigen;
 
+const float g = 9.81;  // 重力加速度
+
 // 基于DH模型的机器人建立类
 class RobotDH
 {
@@ -66,6 +68,14 @@ public:
     末端执行器位姿
     */
     Matrix4f initSE3;  // 初始末端相对于基座标系的齐次变换矩阵
+
+    /*
+    动力学参数
+    */
+    VectorXf mass;  // 各个连杆的质量
+    Matrix<float, Dynamic, 3> Inertia;  // 各个连杆的转动惯量矩阵，维度为3*3n
+    VectorXf dTheta;  // 每个关节的角速度
+    VectorXf ddTheta;  // 每个关节的角加速度
 
 };
 
