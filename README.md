@@ -1,5 +1,5 @@
 # RoboticsToolbox ver.C++
-### by YangHaixin, SCU, [我的CSDN](https://blog.csdn.net/sinat_38887014?spm=1001.2014.3001.5113)，[个人博客](yanghaixin.cn)
+### by YangHaixin, SCU, [我的CSDN](https://blog.csdn.net/sinat_38887014?spm=1001.2014.3001.5113)，[个人博客](http://www.yanghaixin.cn/)
 ![](https://img.shields.io/badge/Language-C++-blue.svg)
 ![](https://img.shields.io/badge/Ubuntu-18.0.4-orange?style=flat&logo=Ubuntu&logoColor=ffffff)
 ![](https://img.shields.io/badge/Editor-VS%20Code-blueviolet?style=flat&logo=Visual%20Studio%20Code&logoColor=ffffff)
@@ -219,7 +219,7 @@ $J^{-1}=(J^T*J)^{-1}J^T$
 
 ## 2020.11.09
 
-今天啥都没干，唉。唯一的进展就是把个人博客搭好了，直接往里面写文章就行了。
+今天啥都没干，唉。唯一的进展就是把个人博客搭好了，直接往里面写文章就行了。然后在`RobotTwist`和`RobotTwistInit`中增加了机械臂的动力学参数，目前只添加了PUMA560机械臂的动力学参数，准备写动力学求解了。
 
 明天还要去卡诺普公司交流，希望能够针对工业机器人面对的真实困难进行研究，不想再只纸上谈兵了，想做点真实的。
 
