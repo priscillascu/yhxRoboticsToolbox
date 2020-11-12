@@ -1,5 +1,5 @@
 # RoboticsToolbox ver.C++
-### by YangHaixin, SCU, [我的CSDN](https://blog.csdn.net/sinat_38887014?spm=1001.2014.3001.5113)，[个人博客](http://www.yanghaixin.cn/)
+### by YangHaixin, SCU, [我的CSDN](https://blog.csdn.net/sinat_38887014?spm=1001.2014.3001.5113)，[个人博客](http://www.yanghaixin.cn/)，[LinkedIn](https://www.linkedin.com/in/%E6%B5%B7%E9%91%AB-%E6%9D%A8-0a59051bb/)
 ![](https://img.shields.io/badge/Language-C++-blue.svg)
 ![](https://img.shields.io/badge/Ubuntu-18.0.4-orange?style=flat&logo=Ubuntu&logoColor=ffffff)
 ![](https://img.shields.io/badge/Editor-VS%20Code-blueviolet?style=flat&logo=Visual%20Studio%20Code&logoColor=ffffff)
